@@ -4,32 +4,6 @@
  */
 
 /**
- * 从 scheduleHtmlProvider
- * @param str 从 scheduleHtmlProvider 方法中获取到的包含课表信息的 HTML 字符串
- * @returns {[{
- *      name: string,
- *      weeks: number[],
- *      teacher: string,
- *      day: number,
- *      sections: number[],
- *      position: string,
- *  }]}
- */
-function scheduleHtmlParser(str) {
-    try {
-        // 通过 Range 将 string 转换为 DocumentFragment 方便解析（才不会告诉你是没看懂 jQuery）
-        const range = document.createRange()
-        range.selectNodeContents(document.createElement('tbody'))
-        const html = range.createContextualFragment(str)
-        return parse(html)
-    } catch (e) {
-        // 拦截错误，返回空数组
-        console.log(e)
-        return []
-    }
-}
-
-/**
  * 解析 HTML 为课表数据<br>
  * name: string 课程名称<br>
  * position: string 上课地点<br>
@@ -37,31 +11,36 @@ function scheduleHtmlParser(str) {
  * weeks: number[] 周数<br>
  * day: number 星期几<br>
  * sections: number[] 节次<br>
- * @param html
- * @returns {[{
+ * @param str 从 scheduleHtmlProvider 方法中获取到的包含课表信息的 HTML 字符串
+ * @returns {Array<{
  *      name: string,
- *      position: string,
- *      teacher: string,
  *      weeks: number[],
+ *      teacher: string,
  *      day: number,
  *      sections: number[],
- *  }]}
+ *      position: string,
+ *  }>}
  */
-function parse(html) {
+function scheduleHtmlParser(str) {
     // 用于删除调课等干扰解析的信息
     const classInfoPattern = /<font color="red">(.*?)<\/font>/g
+    // 取消
+    const $ = cheerio.load(str, {
+        decodeEntities: false, xmlMode: true
+    })
 
     let result = []
 
     // tr 为行
-    let trs = html.querySelectorAll('tr')
+    let trs = $('tr')
     // 第 2, 4, 6 ... 2n 行为第 1, 2, 3 ... n 大节
     for (let trIndex = 2; trIndex < trs.length; trIndex += 2) {
-        // td 为列,
-        const tds = trs[trIndex].querySelectorAll('td')
+        // td 为列
+        const tds = trs.eq(trIndex).find('td')
         const tdIndexVar = tds.length - 8
         for (let tdIndex = 0; tdIndex < tds.length; tdIndex++) {
-            const classInfo = tds[tdIndex].innerHTML
+            // 获取到单个坐标内的课程信息
+            const classInfo = tds.eq(tdIndex).html()
                 .replace("\n", "")
             // 若当前坐标内未包含 <br> 字符串，则代表当前坐标不包含课程信息
             if (classInfo.indexOf('<br>') < 0) continue

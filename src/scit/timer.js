@@ -12,13 +12,13 @@
  * forenoon: number 上午课程节数，[1, 10] 之间的整数<br>
  * afternoon: number 下午课程节数，[0, 10]之间的整数<br>
  * night: number 晚间课程节数，[0, 10]之间的整数<br>
- * sections: [{<br>
+ * sections: Array<{ 课程时间表，注意：总长度要和上边配置的节数加和对齐<br>
  *   section: number 节次，[1, 30] 之间的整数<br>
  *   startTime: string 开始时间，参照这个标准格式 5 位长度字符串<br>
  *   endTime: string 结束时间，同上<br>
- * }] 课程时间表，注意：总长度要和上边配置的节数加和对齐<br>
- * @param providerRes
- * @param parserRes
+ * }><br>
+ * @param providerRes 函数 scheduleHtmlProvider 返回值
+ * @param parserRes 函数 scheduleHtmlParser 返回值
  * @returns {Promise<{
  *     totalWeek: number,
  *     startSemester: string,
@@ -27,24 +27,14 @@
  *     forenoon: number,
  *     afternoon: number,
  *     night: number,
- *     sections: [{
+ *     sections: Array<{
  *       section: number,
  *       startTime: string,
  *       endTime: string,
- *     }],
+ *     }>,
  *   }>}
  */
 async function scheduleTimer({ providerRes, parserRes } = {}) {
-    let maxWeek = 0
-    for (let clazz = 0; clazz < parserRes.length; clazz++) {
-        const weeks = parserRes[clazz].weeks
-        maxWeek = Math.max(maxWeek, weeks)
-    }
-    return {
-        totalWeek: maxWeek,
-        showWeekend: true,
-        forenoon: 4,
-        afternoon: 4,
-        night: 2,
-    }
+    // TODO 阿巴阿巴
+    return { }
 }

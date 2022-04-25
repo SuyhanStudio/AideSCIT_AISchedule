@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="e1be2ae8-d53e-4596-b594-dee49ae54160" name="AISchedule" url="http://localhost:2333">
+        <fileTransfer mountedRoot="E:\Documents\GitHub\AideSCIT_AISchedule\bin\v0.3.6\localTools\code" accessType="MOUNT" port="0" />
+      </webServer>
+    </option>
+  </component>
+</project>
