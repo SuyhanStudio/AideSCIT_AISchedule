@@ -35,6 +35,24 @@
  *   }>}
  */
 async function scheduleTimer({ providerRes, parserRes } = {}) {
-    // TODO 阿巴阿巴
-    return { }
+    let totalWeek = 0
+    let showWeekend = false
+    for (const parserItem of parserRes) {
+        if (parserItem.day > 5) {
+            showWeekend = true
+        }
+        for (const weekItem of parserItem.weeks) {
+            if (weekItem > totalWeek) {
+                totalWeek = weekItem
+            }
+        }
+    }
+    return {
+        totalWeek: totalWeek,
+        startWithSunday: false,
+        showWeekend: showWeekend,
+        forenoon: 4,
+        afternoon: 4,
+        night: 2,
+    }
 }
